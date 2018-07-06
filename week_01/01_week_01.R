@@ -4,6 +4,7 @@ library(scales)
 library(magrittr)
 library(maps)
 library(usmap)
+library(geofacet)
 
 tuition_data <- read_xlsx('week_01/us_avg_tuition.xlsx')
 
@@ -95,3 +96,31 @@ plot_usmap(data = tuition_cats %>% rename(state = State), values = "change_cat2"
     na.translate = FALSE
   ) +
   theme(legend.position = "top")
+
+
+tuition_cats %>%
+  mutate(state_rank = row_number(`2015-16`)) %>%
+  ggplot() +
+  #annotate("rect", xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, aes(fill = change_cat2)) +
+  geom_rect(xmin = -1, xmax = 2, ymin = -1, ymax = 2, aes(fill = change_cat2)) +
+  geom_label(aes(x = 0.25, y = .75, label = dollar(round(`2015-16`,-1)))) +
+  geom_label(aes(x = 0.25, y = 0.25, label = state_rank)) +
+  facet_geo(~ State) +
+  scale_fill_manual(
+    values = c(
+      "#7b91ba",
+      "#bcbdbf",
+      "#e0c791",
+      "#f3c355",
+      "#f1ad00",
+      "#e06d2c",
+      "#d22425",
+      "#9f0f19"
+    )
+  ) +
+  theme_light() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "top") +
+  scale_x_continuous(limits = c(0, 1)) +
+  scale_y_continuous(limits = c(0, 1))

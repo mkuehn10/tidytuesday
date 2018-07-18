@@ -1,7 +1,6 @@
 library(tidyverse)
 library(readxl)
 library(scales)
-library(magrittr)
 library(maps)
 library(usmap)
 library(geofacet)
@@ -80,6 +79,10 @@ tuition_cats %>%
     )
   ) +
   theme_light()
+
+save(tuition_data, file = 'week_01/tuition_data.Rdata')
+save(tuition_cats, file = 'week_01/tuition_cats.Rdata')
+
 
 plot_usmap(data = tuition_cats %>% rename(state = State), values = "change_cat2") +
   scale_fill_manual(
